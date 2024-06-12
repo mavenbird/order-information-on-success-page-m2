@@ -33,7 +33,8 @@ Enable merchants to efficiently manage orders with comprehensive information ava
 This extension is compatible with Magento 2.x versions, ensuring seamless integration with your existing store setup.
 
 ## Installation:
-**Install via composer (recommend)**
+**Install via composer (recommend)** - 
+
 Easy installation process with step-by-step instructions provided for hassle-free setup.
 ~~~~~~~~~~~~~~~~~~~~~
 composer require mavenbird/order-info-on-success-page-magento2
@@ -45,6 +46,13 @@ php bin/magento cache:flush
 
 ## Upgrade/Update Module:
 Easy update process with step-by-step instructions provided for hassle-free setup.
+~~~~~~~~~~~~~~~~~~~~~
+composer update mavenbird/order-info-on-success-page-magento2
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy
+php bin/magento setup:di:compile
+php bin/magento cache:flush
+~~~~~~~~~~~~~~~~~~~~~
 
 ## Customization Options:
 Tailor the display of order information to match your store's branding and layout preferences with customizable templates and styling options.
