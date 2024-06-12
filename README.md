@@ -45,7 +45,7 @@ php bin/magento cache:flush
 ~~~~~~~~~~~~~~~~~~~~~
 
 ## Upgrade/Update Module:
-Easy update process with step-by-step instructions provided for hassle-free setup.
+Run the following command in Magento 2 root folder for easy update -
 ~~~~~~~~~~~~~~~~~~~~~
 composer update mavenbird/order-info-on-success-page-magento2
 php bin/magento setup:upgrade
