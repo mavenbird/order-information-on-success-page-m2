@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <order_details>
+            <general>
+                <enable>1</enable>
+                <show_order_product>1</show_order_product>
+                <show_shipping_address>1</show_shipping_address>
+                <show_shipping_method>1</show_shipping_method>
+                <show_billing_address>1</show_billing_address>
+                <show_payment_method>1</show_payment_method>
+                <show_print_order_link>1</show_print_order_link>
+                <show_reorder_link>1</show_reorder_link>
+                <show_order_status>1</show_order_status>
+            </general>
+            <thank_cofig>
+                <size_thanks>20</size_thanks>
+                <color_thanks>FFFFFF</color_thanks>
+            </thank_cofig>
+            <before_config>
+                <size_before_text>20</size_before_text>
+                <color_text_before>FFFFFF</color_text_before>
+            </before_config>
+            <after_config>
+                <size_after_text>20</size_after_text>
+                <color_text_after>FFFFFF</color_text_after>
+            </after_config>
+        </order_details>
+    </default>
+</config>

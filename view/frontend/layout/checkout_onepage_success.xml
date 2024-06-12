@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+ -->
+<body>
+    <referenceContainer name="content">
+        <block class="Mavenbird\OrderInformation\Block\Details" name="mavenbird.get.order.details" template="Mavenbird_OrderInformation::order/success.phtml" after="-">
+            <block class="Mavenbird\OrderInformation\Block\Details" name="order.totals" template="Mavenbird_OrderInformation::order/success/totals.phtml">
+                <arguments>
+                    <argument name="label_properties" xsi:type="string">class="table-method"</argument>
+                    <argument name="value_properties" xsi:type="string">class="number"</argument>
+                </arguments>
+                <block class="Mavenbird\OrderInformation\Block\Tax" name="tax" template="Mavenbird_OrderInformation::order/success/tax.phtml"/>
+            </block>
+        </block>
+    </referenceContainer>
+
+    <referenceBlock name="checkout.success" remove="true"/>
+    <head>
+        <css src="Mavenbird_OrderInformation::css/orderinformation.css"/>
+    </head>
+        
+</body>

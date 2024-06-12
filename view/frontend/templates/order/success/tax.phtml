@@ -1,0 +1,69 @@
+<?php
+/**
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+ */
+?>
+<?php
+    $order  = $block->getOrder();
+    $source = $block->getSource();
+    $fullInfo = $block->getHelper()->getCalculatedTaxes($source);
+?>
+
+<?php if ($fullInfo && $block->displayFullSummary()): ?>
+        <?php foreach ($fullInfo as $info): ?>
+            <?php
+                $percent    = $info['percent'];
+                $amount     = $info['tax_amount'];
+                $baseAmount = $info['base_tax_amount'];
+                $title      = $info['title'];
+            ?>
+            <tr class="totals tax details?>
+            <?=($block->getIsPlaneMode()) ? ' plane' : '';?>">
+                <th colspan="5" <?= /* @noEscape */ $block->getLabelProperties()?>>
+                    <?= $escaper->escapeHtml($title); ?>
+                    <?php if ($percent !== null): ?>
+                        (<?= (float)$percent; ?>%)
+                    <?php endif; ?>
+                    <br />
+                </th>
+                <td <?= /* @noEscape */ $block->getValueProperties()?> rowspan="1">
+                    <?= /* @noEscape */ $order->formatPrice($amount); ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+<?php endif;?>
+
+<?php if ($block->displayFullSummary() && $fullInfo && !$block->getIsPlaneMode()): ?>
+<tr class="totals-tax-summary">
+<?php elseif ($block->displayFullSummary() && $fullInfo && $block->getIsPlaneMode()): ?>
+<tr class="totals-tax-summary plane">
+<?php else: ?>
+<tr class="totals-tax">
+<?php endif; ?>
+    <th colspan="5"<?= /* @noEscape */ $block->getLabelProperties()?> scope="row">
+        <?php if ($block->displayFullSummary()): ?>
+            <div class="detailed"><?= /* @noEscape */ __('Tax'); ?></div>
+        <?php else: ?>
+            <?= /* @noEscape */ __('Tax'); ?>
+        <?php endif;?>
+    </th>
+    <td <?= /* @noEscape */ $block->getValueProperties()?>
+            data-th="<?= $escaper->escapeHtml(__('Tax')); ?>">
+        <?= /* @noEscape */ $order->formatPrice($source->getTaxAmount()) ?>
+    </td>
+</tr>

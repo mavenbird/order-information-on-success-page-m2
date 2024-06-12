@@ -1,0 +1,42 @@
+<?php
+/**
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+ */
+?>
+<?php foreach ($block->getTotals() as $code => $total): ?>
+    <?php if ($total->getBlockName()): ?>
+        <?= $block->getChildHtml($total->getBlockName(), false); ?>
+    <?php else:?>
+    <tr class="<?= /* @noEscape */ $code?>">
+        <th colspan="5" <?= /* @noEscape */ $block->getLabelProperties()?> scope="row">
+            <?php if ($total->getStrong()):?>
+            <strong><?= $escaper->escapeHtml($total->getLabel());?></strong>
+            <?php else:?>
+                <?= $escaper->escapeHtml($total->getLabel());?>
+            <?php endif?>
+        </th>
+        <td <?= /* @noEscape */ $block->getValueProperties()?> data-th="<?= $escaper->escapeHtml($total->getLabel());?>">
+            <?php if ($total->getStrong()):?>
+            <strong><?= /* @noEscape */ $block->formatValue($total) ?></strong>
+            <?php else:?>
+                <?= /* @noEscape */ $block->formatValue($total) ?>
+            <?php endif?>
+        </td>
+    </tr>
+    <?php endif?>
+<?php endforeach?>
