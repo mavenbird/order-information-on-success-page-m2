@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!--
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="mavenbird" translate="label" sortOrder="300">             
+            <label><![CDATA[Mavenbird Extensions]]></label> 
+        </tab>
+        <section id="order_details" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Order Information on Success Page</label>
+            <tab>mavenbird</tab>
+            <resource>Mavenbird_OrderInformation::config_OrderInformation</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_order_product" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Ordered Product</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_shipping_address" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Shipping Address</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                 <field id="show_shipping_method" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Shipping Method</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                 <field id="show_billing_address" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Billing Address</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_payment_method" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Payment Method</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_print_order_link" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Print Order Link</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_reorder_link" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Reorder Link</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_order_status" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Order Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="thank_cofig" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Thank You Message Configuration</label>
+                <field id="thank_messager" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Thank You Message</label>
+                    <comment>Thank you message will be displayed on the frontend.</comment>
+                </field>
+                <field id="size_thanks" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Input Size (Pixel)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment> This config will change text size of thank you message on the frontend.</comment>
+                </field>
+                 <field id="color_thanks" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_class>jscolor</frontend_class>
+                    <label>Color</label>
+                </field>
+            </group>
+
+            <group id="before_config" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Text Above Order Details Configuration</label>
+                <field id="text_before" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Above Order Details</label>
+                    <comment>This text will be displayed above your order details on the frontend.</comment>
+                </field>
+                 <field id="size_before_text" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Input Size (Pixel)</label>
+                     <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>This config will change size of text above your order on the frontend.</comment>
+                </field>
+                 <field id="color_text_before" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_class>jscolor</frontend_class>
+                    <label>Color</label>
+                </field>
+            </group>
+
+            <group id="after_config" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Text Under Order Details Configuration</label>
+                <field id="text_after" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Under Order Details</label>
+                    <comment>This text will be displayed under your order on the frontend.</comment>
+                </field>
+                <field id="size_after_text" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Input Size (Pixel)</label>
+                     <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>This config will change size of text under your order on the frontend.</comment>
+                </field>
+                 <field id="color_text_after" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_class>jscolor</frontend_class>
+                    <label>Color</label>
+                </field>
+            </group>
+
+           <group id="custom_block_config" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom Block Configuration</label>
+                <field id="enable_cms_block_1" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable CMS Block 1</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/disable CMS Block 1</comment>
+                </field>
+                <field id="cms_block" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CMS Block 1</label>
+                    <source_model>Magento\Cms\Model\Config\Source\Block</source_model>
+                    <depends>
+                        <field id="enable_cms_block_1">1</field>
+                    </depends>
+                </field>
+                <field id="enable_cms_block_2" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable CMS Block 2</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/disable CMS Block 2</comment>
+                </field>
+                <field id="second_cms_block" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CMS Block 2</label>
+                    <source_model>Magento\Cms\Model\Config\Source\Block</source_model>
+                    <depends>
+                        <field id="enable_cms_block_2">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

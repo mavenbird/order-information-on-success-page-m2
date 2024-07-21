@@ -1,0 +1,157 @@
+/**
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+*/
+.bold{
+    font-weight: bold;
+}
+.checkout-success{
+    margin-top: 10px;
+}
+.order-date{
+    margin-top: 20px;
+}
+.bmess{
+    margin: 5px 0 ;
+    word-wrap: break-word;
+    width: 50%;
+}
+.info{
+    float: left;
+    width: 100%;
+    margin: 3% 0;
+}
+.shipping-address,.shipping-method,.billing-address,.billing-method{
+    width: 25%;
+    float: left;
+}
+.box-content{
+    margin-top: 5%;
+}
+.box-title{
+    border-left: 7px solid rgb(225,221,219);
+}
+.box-des{
+    padding-left: 8px;
+}
+.show-order{
+    clear: both;
+}
+.fmess{
+    float: left;
+    width: 50%;
+    margin-top: 15px;
+    margin-bottom: 50px;
+}
+.actions-order{
+    float: right;
+    padding-top: 15px;
+    margin-right: 62px;
+}
+.reorderurl,.printurl{
+    float: left;
+    font-size: 20px;
+}
+.printurl{
+    padding-left: 50px;
+}
+.action-reorder:hover,.action-print:hover{
+    text-decoration: none;
+    color: #DF0029;
+}
+.text-under{
+    height: 50px;
+}
+.status{
+    margin-top:5px;
+}
+.button-continue{
+    width: 50%;
+    float: right;
+}
+.button-continue .continue{
+    background-color: #ff5501;
+    border: none;
+    float: right;
+    clear: both;
+    padding: 10px 25px;
+    font-size: 12px;
+    margin-right: 70px;
+}
+.button-continue a.action.primary{
+    border-radius: 0px;
+}
+.button-continue .continue:hover{
+    background-color: #ff5501;
+    border:1px solid #ff5501;
+}
+table td{
+    background-color: rgb(225,221,219);
+    padding: 10px 0 10px 5px;
+}
+tfoot th{
+    background-color: rgb(225,221,219);
+    text-align: right;
+    padding-right: 50px !important;
+    text-transform: uppercase;
+}
+tfoot td{
+    text-align: right;
+    padding-right: 40px !important;
+}
+table tbody tr td dl{
+    margin-bottom: 0px;
+    padding-top: 5px;
+}
+.data-item{
+    border-bottom: 4px solid white;
+    border-top: 4px solid white;
+}
+.data-item td{
+    border-right: 4px solid white;
+}
+.table-number{
+    text-align: right;
+}
+.data-item td:last-child{
+    border-right: none;
+}
+@media only screen and (max-width: 480px){
+    .fmess,.bmess{
+         width: 100%;
+    }
+
+    .button-continue{
+        width: 100%;
+        margin-top: 10px;
+    }
+    .fmess{
+        margin-bottom: 10px;
+    }
+    .actions-order,.button-continue .continue{
+        float: none;
+    }
+    .actions-order{
+        clear: both;
+    }
+    .data-item{
+        border-bottom: none;
+    }
+    .data-item td{
+        border-right: none;
+    }
+}
