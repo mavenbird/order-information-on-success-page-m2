@@ -16,58 +16,49 @@
  * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
 */
-.bold{
+.bold {
     font-weight: bold;
 }
 .checkout-success{
     margin-top: 10px;
-}
-.order-date{
-    margin-top: 20px;
 }
 .bmess{
     margin: 5px 0 ;
     word-wrap: break-word;
     width: 50%;
 }
+.billing-info,
 .info{
-    float: left;
-    width: 100%;
-    margin: 3% 0;
+   display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 .shipping-address,.shipping-method,.billing-address,.billing-method{
-    width: 25%;
-    float: left;
+    border: 1px solid #ddd;
 }
 .box-content{
-    margin-top: 5%;
+    padding: 15px;
 }
-.box-title{
-    border-left: 7px solid rgb(225,221,219);
-}
-.box-des{
-    padding-left: 8px;
-}
+.orderSuccess-page .box-title { display: block; background: #f4f4f4; padding: 10px 15px; }
 .show-order{
     clear: both;
 }
 .fmess{
     float: left;
     width: 50%;
-    margin-top: 15px;
-    margin-bottom: 50px;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 .actions-order{
     float: right;
-    padding-top: 15px;
-    margin-right: 62px;
 }
 .reorderurl,.printurl{
     float: left;
     font-size: 20px;
 }
 .printurl{
-    padding-left: 50px;
+    padding-left: 10px;
 }
 .action-reorder:hover,.action-print:hover{
     text-decoration: none;
@@ -76,46 +67,30 @@
 .text-under{
     height: 50px;
 }
-.status{
-    margin-top:5px;
-}
 .button-continue{
     width: 50%;
     float: right;
 }
 .button-continue .continue{
     background-color: #ff5501;
-    border: none;
+    border-color:#ff5501;
     float: right;
     clear: both;
     padding: 10px 25px;
     font-size: 12px;
-    margin-right: 70px;
 }
 .button-continue a.action.primary{
     border-radius: 0px;
+    border: 0;
+
 }
 .button-continue .continue:hover{
     background-color: #ff5501;
-    border:1px solid #ff5501;
-}
-table td{
-    background-color: rgb(225,221,219);
-    padding: 10px 0 10px 5px;
-}
-tfoot th{
-    background-color: rgb(225,221,219);
-    text-align: right;
-    padding-right: 50px !important;
-    text-transform: uppercase;
-}
-tfoot td{
-    text-align: right;
-    padding-right: 40px !important;
+    border-color:#ff5501;
 }
 table tbody tr td dl{
     margin-bottom: 0px;
-    padding-top: 5px;
+    padding-top: 3px;
 }
 .data-item{
     border-bottom: 4px solid white;
@@ -127,8 +102,40 @@ table tbody tr td dl{
 .table-number{
     text-align: right;
 }
-.data-item td:last-child{
-    border-right: none;
+
+.orderProduct-inner { display: flex; gap: 15px; }
+.orderProduct-inner .product-item-details h4 { margin: 0 0 8px; }
+.orderSuccess-table table .data-item td { border: 1px solid #ddd;  }
+.orderSuccess-table table tr.data-item { border: 0; }
+.orderSuccess-table .small-product-image { height: 60px; width: 60px; }
+.orderSuccess-table table .data-item td,
+.orderSuccess-table table thead th { border: 1px solid #ddd; background: #fff; }
+.orderSuccess-table .table tfoot th, 
+.orderSuccess-table .table tfoot td { background: #f4f4f4; border: 1px solid #ddd; text-align: right; }
+.orderSuccess-page { padding-bottom: 40px; }
+.adress-product { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding-top: 15px; }
+.order-date-status .orderNumber, 
+.order-date-status .order-date, 
+.order-date-status .status { display: flex; margin: 0 0 10px; }
+.order-date-status label { color: #333; margin-right: 3px; }
+.order-date-status { margin:0; font-size: 16px; display: flex; column-gap: 11px; color: #888; justify-content: center; padding: 3px 0 10px; flex-wrap: wrap; }
+.checkout-onepage-success .page-title-wrapper:before { content: ""; background: url(../images/check-icon.svg) 0 0 no-repeat;
+width: 60px; height: 60px; display: block; background-size: contain; margin: 20px auto 10px; }
+.checkout-onepage-success .page-title-wrapper { text-align: center; }
+.checkout-onepage-success .page-title-wrapper .page-title { margin-bottom: 10px; }
+.checkout-onepage-success .page-title-wrapper .action.print { display: none; }
+.checkout-success p.subtext { text-align: center; font-size: 18px; }
+.tmess { padding-top: 8px; }
+
+@media only screen and (max-width: 1023px){
+.adress-product { grid-template-columns: 1fr; gap: 5px; }
+.orderSuccess-page { padding-bottom: 10px; }
+}
+@media only screen and (max-width: 639px){
+    .orderSuccess-table .table:not(.totals):not(.table-comparison) tfoot .mark { border-right: 0 }
+    .orderSuccess-table .table tfoot th, 
+    .orderSuccess-table .table tfoot td { border-top: 0; }
+    .order-date-status { font-size: 15px; }
 }
 @media only screen and (max-width: 480px){
     .fmess,.bmess{
@@ -149,9 +156,11 @@ table tbody tr td dl{
         clear: both;
     }
     .data-item{
-        border-bottom: none;
+        border-bottom: 0;
     }
     .data-item td{
-        border-right: none;
+        border-right: 0;
     }
+    .billing-info, .info { grid-template-columns: 1fr; }
+    .order-date-status { font-size: 14px; }
 }
