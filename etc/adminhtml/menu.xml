@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mavenbird Technologies Private Limited
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://mavenbird.com/Mavenbird-Module-License.txt
+ *
+ * =================================================================
+ *
+ * @category   Mavenbird
+ * @package    Mavenbird_OrderInformation
+ * @author     Mavenbird Team
+ * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
+ * @license    http://mavenbird.com/Mavenbird-Module-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+    <menu>
+            <update id="Magento_Backend::mbmenu" title="Mavenbird" module="Magento_Backend" sortOrder="10" resource="Magento_Backend::mbmenu" />
+
+            <add id="Mavenbird_OrderInformation::Heading" title="OrderInformation" module="Mavenbird_OrderInformation" sortOrder="20" parent="Magento_Backend::mbmenu" resource="Mavenbird_OrderInformation::Heading" />
+            <add id="Mavenbird_OrderInformation::configuration" title="Configuration" module="Mavenbird_OrderInformation" sortOrder="180" parent="Mavenbird_OrderInformation::Heading" action="adminhtml/system_config/edit/section/order_details" resource="Mavenbird_OrderInformation::configuration"/>
+    </menu>
+</config>
