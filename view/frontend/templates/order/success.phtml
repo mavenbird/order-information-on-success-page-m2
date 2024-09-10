@@ -36,23 +36,40 @@ $textaftercl = '#'.$block->getAfterTextColorDetails();
 $selectedCmsBlock = $block->getCmsBlockDetails();
 $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
 ?>
+<div class="orderSuccess-page">
 <div class="checkout-success">
 <?php if ($order->getIncrementId()):?>
-    <?php if ($block->getCustomerId()):?>
-        <p><?= /* @noEscape */__(
-            'Your order number is: %1.',
+    <p class="subtext"><?= /* @noEscape */ __('We\'ll email you an order confirmation with details and tracking info.') ?></p>
+    <div class="order-date-status">
+     <?php if ($block->getCustomerId()):?>
+        <div class="orderNumber">
+            <label><?=/* @noEscape */ __('Order #: ')?></label>
+            <?= /* @noEscape */__(
+            ' %1',
             sprintf(
-                '<a href="%s" class="order-number"><strong>%s</strong></a>',
+                '<a href="%s" class="order-number">%s</a>',
                 $block->getReorder(),
                 $order->getIncrementId()
             )
         )    ?>
-        </p>
+        </div>
         <?php  else:?>
-            <p><?= /* @noEscape */ __('Your order # is: <span>%1</span>.', $order->getIncrementId()) ?></p>
+            <div class="orderNumber"><?= /* @noEscape */ __('Order #: <span>%1</span>.', $order->getIncrementId()) ?></div>
         <?php endif;?>
-            <p><?= /* @noEscape */ __('We\'ll email you an order confirmation with details and tracking info.') ?></p>
+        <span class="sepreter">|</span>
     <?php endif;?>
+
+    <?php if ($block->isEnableOrderStatusDetails()):?>
+        <div class="order-date">
+            <label class="label"> <?=/* @noEscape */ __('Date: ')?></label>
+            <date><?= /* @noEscape */ $formatdate ?></date>
+        </div>
+        <span class="sepreter">|</span>
+            <div class="status">
+                <label><?=/* @noEscape */ __('Status: ')?></label><span><?= /* @noEscape */$order->getStatusLabel() ; ?></span>
+            </div>
+    <?php endif; ?>
+    </div>
 </div>
 
 <?php if ($block->isEnableDetails()):?>
@@ -60,22 +77,12 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
     <?php $thankMss = $block->getThankMessegerDetails() ?>
     <p class="tmess">
         <?= /* @noEscape */$thankMss; ?>
-    </p>
-        <?php if ($block->isEnableOrderStatusDetails()):?>
-        <div class="order-date">
-        <span class="label"> <?=/* @noEscape */ __('Order Date: ')?>
-            <date><?= /* @noEscape */ $formatdate ?></date>
-        </span>
-    </div>
-    <div class="status">
-        <p><?=/* @noEscape */ __('Order Status: ')?><span><?= /* @noEscape */$order->getStatusLabel() ; ?></span></p>
-    </div>
-    <?php endif; ?>
+    </p>    
 
     <?php $textbefore = $block->getBeforeTextDetails() ?>
     <div><p class="bmess"><?= /* @noEscape */ $textbefore; ?></p></div>
-   
 <div class="adress-product">
+<div class="shipping_billing_address">
 <div class="info">
     <?php if ($block->isEnableShippingAddressDetails()):?>
         <?php $formatship = $block->formatShipping(); ?>
@@ -133,33 +140,50 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
         </div>
     <?php endif; ?>
 </div>
-
+</div>
+<div class="orderSuccess-show">
 <?php if ($block->isEnableOrderProductDetails()):?>
     <div class="show-order">
-        <table>
+    <div class="orderSuccess-table table-wrapper">
+        <table cellpadding="0" cellspacing="0" border="0" class="table">
+            <thead>
+                <tr>
+                    <th colspan="1"><?= __('Item') ?></th>
+                    <th><?= __('Price') ?></th>
+                    <th><?= __('Qty') ?></th>
+                    <th><?= __('Subtotal') ?></th>
+                </tr>
+            </thead>
             <?php $items = $order->getItemsCollection();
                 foreach ($items as $item): ?>
-                    <?php  if ($item->getParentItem()) { continue;} ?>
+                    <?php  if ($item->getParentItem()) { continue;} ?>                
                 <tr class="data-item">
-                    <td colspan="6">
-                        <?php $productImage = $block->getImageUrl($item->getProduct(), 'product_thumbnail_image'); ?>
-                        <?php if ($productImage): ?>
-                            <img src="<?= /* @noEscape */ $productImage ?>" alt="<?= $escaper->escapeHtml($item->getName()) ?>" class="small-product-image" />
-                            <?php endif; ?>
-                        <?= /* @noEscape */ '<strong>Product Name:</strong> ' . $item->getName() . '<br>'; ?>
-                        <?php $options = $block->getItemOptions($item);
-                            if ($options):
-                                foreach ($options as $option): ?>
-                                    <dl>
-                                        <?= /* @noEscape */ $option['label'] ?> : <?= /* @noEscape */ $option['value'] ?>
-                                    </dl>                      
-                                <?php endforeach;
-                            endif; ?>
-                            <?= /* @noEscape */ '<strong>SKU:</strong>' . $item->getSku() . '<br>'; ?>
-                            <?= /* @noEscape */ '<strong>Price:</strong> ' . $block->formatPrice($item->getPrice(), true, false) . '<br>'; ?>
-                            <?= /* @noEscape */ '<strong>Qty:</strong> ' . $item->getQtyOrdered() . '<br>'; ?>
-                            <?= /* @noEscape */ '<strong>Subtotal:</strong> ' . $block->formatPrice($item->getRowTotal(), true, false); ?>
+                    <td class="item" class="1">
+                        <div class="orderProduct-inner">
+                            <div class="orderProduct-photo">
+                            <?php $productImage = $block->getImageUrl($item->getProduct(), 'product_thumbnail_image'); ?>
+                            <?php if ($productImage): ?>
+                                <img src="<?= /* @noEscape */ $productImage ?>" alt="<?= $escaper->escapeHtml($item->getName()) ?>" class="small-product-image" />
+                            </div>
+                            <div class="product-item-details">
+                                <?php endif; ?>
+                             <h4><?= /* @noEscape */ $item->getName(); ?></h4>
+                             <?= /* @noEscape */ '<strong>SKU : </strong>' . $item->getSku(); ?>
+                            <?php $options = $block->getItemOptions($item);
+                                if ($options):
+                                    foreach ($options as $option): ?>
+                                        <dl>
+                                            <?= /* @noEscape */ $option['label'] ?> : <?= /* @noEscape */ $option['value'] ?>
+                                        </dl>                      
+                                    <?php endforeach;
+                                endif; ?>
+                                
+                            </div>                            
+                        </div>                            
                     </td>
+                    <td data-th="<?= __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
+                    <td data-th="<?= __('Qty') ?>"><?= /* @noEscape */ $item->getQtyOrdered(); ?></td>
+                    <td data-th="<?= __('Subtotal') ?>"><?= /* @noEscape */ $block->formatPrice($item->getRowTotal(), true, false); ?></td>                    
                 </tr>
                     <?php
                     $bundleChildrens = $item->getChildrenItems();
@@ -199,6 +223,7 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
             </tfoot>
         </table>
     </div>
+    </div>
     <?php endif ?>
     
     <div class="text-under">
@@ -207,30 +232,30 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
         <div class="actions-order">
             <?php if ($block->canViewReorder()):?>
             <div class="reorderurl"> 
-                <a class="action-reorder" href="<?= /* @noEscape */ $reorderurl?>">
+                <a class="action-reorder action primary" href="<?= /* @noEscape */ $reorderurl?>">
                     <span><?= /* @noEscape */ __('Re-Order') ?></span>
                 </a>
                 </div>
             <?php endif ?>
             <?php if ($block->canViewPrint()):?>
             <div class="printurl">
-                <a class="action-print" href="<?= /* @noEscape */ $printurl ?>" onclick="this.target='_blank';">
+                <a class="action-print action primary" href="<?= /* @noEscape */ $printurl ?>" onclick="this.target='_blank';">
                     <span><?= /* @noEscape */ __('Print Order') ?></span>
                 </a>
             </div>
             <?php endif ?>
         </div>
     </div>
+    <div class="actions-toolbar">
+        <a class="action primary continue" href="<?= /* @noEscape */ $block->getUrl() ?>">
+            <span><?= /* @noEscape */ __('Continue Shopping') ?></span>
+        </a>
+    </div>
+    </div>    
+    
 </div>
 <?php endif; ?>
 
-</div>
-
-
-<div class="actions-toolbar">
-    <a class="action primary continue" href="<?= /* @noEscape */ $block->getUrl() ?>">
-        <span><?= /* @noEscape */ __('Continue Shopping') ?></span>
-    </a>
 </div>
 
 <?php if ($block->isCmsBlockEnabled()): ?>
@@ -244,7 +269,7 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
         <?= $block->getLayout()->createBlock(\Magento\Cms\Block\Block::class)->setBlockId($selectedSecondCmsBlock)->toHtml(); ?>
     </div>
 <?php endif; ?>
-
+</div>
 
 <?php if ($block->isEnableDetails()): ?>    
 <script type="text/x-magento-init">
@@ -267,9 +292,5 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
     .fmess{
         font-size: <?= /* @noEscape */ $textaftersz.'px' ?>;
         color: <?= /* @noEscape */ $textaftercl ?>;
-    }
-    .small-product-image {
-        height:100px;
-        width: 100px;
     }
 </style>

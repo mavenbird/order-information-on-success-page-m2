@@ -19,13 +19,13 @@
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="mavenbird" translate="label" sortOrder="300">             
-            <label><![CDATA[Mavenbird Extensions]]></label> 
+        <tab id="mavenbird" sortOrder="100" translate="label" class="tab-mavenbird-extensions">
+            <label><![CDATA[Mavenbird Extensions]]></label>
         </tab>
         <section id="order_details" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <tab>mavenbird</tab>
             <class>separator-top</class>
             <label>Order Information on Success Page</label>
-            <tab>mavenbird</tab>
             <resource>Mavenbird_OrderInformation::config_OrderInformation</resource>
             <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Configuration</label>
