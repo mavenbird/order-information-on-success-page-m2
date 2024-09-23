@@ -23,7 +23,7 @@
     <menu>
             <update id="Magento_Backend::mbmenu" title="Mavenbird" module="Magento_Backend" sortOrder="10" resource="Magento_Backend::mbmenu" />
 
-            <add id="Mavenbird_OrderInformation::Heading" title="OrderInformation" module="Mavenbird_OrderInformation" sortOrder="20" parent="Magento_Backend::mbmenu" resource="Mavenbird_OrderInformation::Heading" />
+            <add id="Mavenbird_OrderInformation::Heading" title="Order Info On Success Page" module="Mavenbird_OrderInformation" sortOrder="20" parent="Magento_Backend::mbmenu" resource="Mavenbird_OrderInformation::Heading" />
             <add id="Mavenbird_OrderInformation::configuration" title="Configuration" module="Mavenbird_OrderInformation" sortOrder="180" parent="Mavenbird_OrderInformation::Heading" action="adminhtml/system_config/edit/section/order_details" resource="Mavenbird_OrderInformation::configuration"/>
     </menu>
 </config>
