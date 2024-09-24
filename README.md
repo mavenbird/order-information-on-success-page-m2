@@ -3,6 +3,8 @@
 Empower your Magento 2 store with the ability to provide comprehensive order details right on the order success page. Our Magento 2 Order Information Extension enhances the post-purchase experience by displaying crucial order information, streamlining the process for both merchants and customers. 
 **[Order Information on Success Page for Magento 2](https://mavenbird.com/magento-2-order-information-on-success-page.html)** 
 
+![img3](./doc/images/5.png)
+
 ## Key Features:
 
 - **Customer Order Details:**
