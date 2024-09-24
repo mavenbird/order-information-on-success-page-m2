@@ -34,7 +34,7 @@
             ?>
             <tr class="totals tax details?>
             <?=($block->getIsPlaneMode()) ? ' plane' : '';?>">
-                <th colspan="5" <?= /* @noEscape */ $block->getLabelProperties()?>>
+                <th colspan="3" <?= /* @noEscape */ $block->getLabelProperties()?>>
                     <?= $escaper->escapeHtml($title); ?>
                     <?php if ($percent !== null): ?>
                         (<?= (float)$percent; ?>%)
@@ -55,14 +55,14 @@
 <?php else: ?>
 <tr class="totals-tax">
 <?php endif; ?>
-    <th colspan="3"<?= /* @noEscape */ $block->getLabelProperties()?> scope="row">
+    <th class="mark" colspan="3"<?= /* @noEscape */ $block->getLabelProperties()?> scope="row">
         <?php if ($block->displayFullSummary()): ?>
             <div class="detailed"><?= /* @noEscape */ __('Tax'); ?></div>
         <?php else: ?>
             <?= /* @noEscape */ __('Tax'); ?>
         <?php endif;?>
     </th>
-    <td <?= /* @noEscape */ $block->getValueProperties()?>
+    <td class="amount" <?= /* @noEscape */ $block->getValueProperties()?>
             data-th="<?= $escaper->escapeHtml(__('Tax')); ?>">
         <?= /* @noEscape */ $order->formatPrice($source->getTaxAmount()) ?>
     </td>
