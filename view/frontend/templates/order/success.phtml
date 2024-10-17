@@ -45,13 +45,13 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
         <div class="orderNumber">
             <label><?=/* @noEscape */ __('Order #: ')?></label>
             <?= /* @noEscape */__(
-            ' %1',
-            sprintf(
-                '<a href="%s" class="order-number">%s</a>',
-                $block->getReorder(),
-                $order->getIncrementId()
-            )
-        )    ?>
+                ' %1',
+                sprintf(
+                    '<a href="%s" class="order-number">%s</a>',
+                    $block->getReorder(),
+                    $order->getIncrementId()
+                )
+            )    ?>
         </div>
         <?php  else:?>
             <div class="orderNumber"><?= /* @noEscape */ __('Order #: <span>%1</span>.', $order->getIncrementId()) ?></div>
@@ -142,19 +142,19 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
 </div>
 </div>
 <div class="orderSuccess-show">
-<?php if ($block->isEnableOrderProductDetails()):?>
+    <?php if ($block->isEnableOrderProductDetails()):?>
     <div class="show-order">
     <div class="orderSuccess-table table-wrapper">
         <table cellpadding="0" cellspacing="0" border="0" class="table">
             <thead>
                 <tr>
-                    <th colspan="1"><?= __('Item') ?></th>
-                    <th><?= __('Price') ?></th>
-                    <th><?= __('Qty') ?></th>
-                    <th><?= __('Subtotal') ?></th>
+                    <th colspan="1"><?= /* @noEscape */ __('Item') ?></th>
+                    <th><?= /* @noEscape */ __('Price') ?></th>
+                    <th><?= /* @noEscape */ __('Qty') ?></th>
+                    <th><?= /* @noEscape */ __('Subtotal') ?></th>
                 </tr>
             </thead>
-            <?php $items = $order->getItemsCollection();
+                <?php $items = $order->getItemsCollection();
                 foreach ($items as $item): ?>
                     <?php  if ($item->getParentItem()) { continue;} ?>                
                 <tr class="data-item">
@@ -170,8 +170,8 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
                              <h4><?= /* @noEscape */ $item->getName(); ?></h4>
                              <?= /* @noEscape */ '<strong>SKU : </strong>' . $item->getSku(); ?>
                             <?php $options = $block->getItemOptions($item);
-                                if ($options):
-                                    foreach ($options as $option): ?>
+                            if ($options):
+                                foreach ($options as $option): ?>
                                         <dl>
                                             <?= /* @noEscape */ $option['label'] ?> : <?= /* @noEscape */ $option['value'] ?>
                                         </dl>                      
@@ -181,9 +181,9 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
                             </div>                            
                         </div>                            
                     </td>
-                    <td data-th="<?= __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
-                    <td data-th="<?= __('Qty') ?>"><?= /* @noEscape */ $item->getQtyOrdered(); ?></td>
-                    <td data-th="<?= __('Subtotal') ?>"><?= /* @noEscape */ $block->formatPrice($item->getRowTotal(), true, false); ?></td>                    
+                    <td data-th="<?= /* @noEscape */ __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
+                    <td data-th="<?= /* @noEscape */ __('Qty') ?>"><?= /* @noEscape */ $item->getQtyOrdered(); ?></td>
+                    <td data-th="<?= /* @noEscape */ __('Subtotal') ?>"><?= /* @noEscape */ $block->formatPrice($item->getRowTotal(), true, false); ?></td>                    
                 </tr>
                     <?php
                     $bundleChildrens = $item->getChildrenItems();
@@ -219,12 +219,12 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
                 <?php endif ?>
 <?php endforeach ?>
             <tfoot>
-                <?= $block->getChildHtml('order.totals') ?>
+                    <?= $block->getChildHtml('order.totals') ?>
             </tfoot>
         </table>
     </div>
     </div>
-    <?php endif ?>
+        <?php endif ?>
     
     <div class="text-under">
         <?php $textafter = $block->getAfterTextDetails() ?>   

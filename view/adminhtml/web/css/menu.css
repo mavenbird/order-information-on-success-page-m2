@@ -2,35 +2,35 @@
     content: '' !important;
     background: url(../images/module-icon2.png) no-repeat 0px 0px;
     margin: 0 auto .3rem;
-    width: 28px;
-    height: 25px;
-    background-size: 26px auto;
+    width: 26px;
+    height: 26px;
+    background-size: 24px auto;
 }
 #menu-magento-backend-mbmenu > a:hover::before, 
 #menu-magento-backend-mbmenu._show > a::before ,
 .admin__menu #menu-magento-backend-mbmenu > a:hover:before {
     background: url(../images/module-icon1.png) no-repeat 0px 0px !important;
-    background-size: 26px auto !important;
+    background-size: 24px auto !important;
 }
 .admin__menu [data-ui-id^="menu-mavenbird-"] .submenu-group-title span:before {
     background: url(../images/module-icon2.png) no-repeat;
-    width: 24px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
     content: '';
     display: inline-block;
-    margin-right: 8px;
+    margin-right: 6px;
     vertical-align: top;
-    background-size: 100% auto; 
+    background-size: 24px auto; 
 }
 .admin__menu #menu-magento-backend-mbmenu .submenu-group-title span:before { display: none;}
 .config-nav .tab-mavenbird-extensions .admin__page-nav-title strong { display: flex; align-items: center; } 
 .config-nav .tab-mavenbird-extensions .admin__page-nav-title strong:before { 
     background: url(../images/module-icon.png) 0 0 no-repeat;
     width: 26px;
-    height: 24px;
+    height: 26px;
     content: '';
     display: inline-block;
     margin-right: 8px;
     vertical-align: top;
-    background-size: 100% auto; 
+    background-size: 26px auto; 
 }
