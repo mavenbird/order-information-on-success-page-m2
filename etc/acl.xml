@@ -1,30 +1,17 @@
 <?xml version="1.0"?>
-<!--
- * Mavenbird Technologies Private Limited
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://mavenbird.com/Mavenbird-Module-License.txt
- *
- * =================================================================
- *
- * @category   Mavenbird
- * @package    Mavenbird_OrderInformation
- * @author     Mavenbird Team
- * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
- * @license    http://mavenbird.com/Mavenbird-Module-License.txt
- -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::mbmenu" title="Mavenbird" sortOrder="10">
+                    <resource id="Mavenbird_OrderInformation::Heading" title="Order Information" sortOrder="20">
+                        <resource id="Mavenbird_OrderInformation::configuration" title="Configuration" sortOrder="30"/>
+                    </resource>
+                </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Mavenbird_OrderInformation::config_OrderInformation" title="Mavenbird Extensions"/>
+                            <resource id="Mavenbird_OrderInformation::config_OrderInformation" title="Order Information Section"/>
                         </resource>
                     </resource>
                 </resource>
