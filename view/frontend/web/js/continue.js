@@ -17,10 +17,11 @@
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  */
 define([
-        "jquery",
-    ], function ($) {
-        $(document).ready(function ($) {
-            $(".actions-toolbar").addClass('button-continue');
-            $(".button-continue").removeClass('actions-toolbar');
-        });
+    "jquery",
+], function ($) {
+    $(document).ready(function ($) {
+        // Use a more specific selector to avoid conflicts
+        $(".mavenbird-actions-toolbar").addClass('button-continue');
+        $(".mavenbird-button-continue").removeClass('mavenbird-actions-toolbar');
     });
+});

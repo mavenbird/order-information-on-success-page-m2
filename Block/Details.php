@@ -348,7 +348,10 @@ class Details extends \Magento\Sales\Block\Order\Totals
      */
     public function getCustomerId()
     {
-        return $this->customerSession->getCustomer()->getId();
+        if ($this->customerSession->isLoggedIn()) {
+            return $this->customerSession->getCustomer()->getId();
+        }
+        return null;
     }
 
     /**
@@ -421,7 +424,7 @@ class Details extends \Magento\Sales\Block\Order\Totals
         if ($this->helper->isEnablePrintOrderLink() && $this->getCustomerId()) {
             return true;
         }
-            return false;
+        return false;
     }
 
     /**
