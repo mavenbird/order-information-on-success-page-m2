@@ -17,22 +17,23 @@
  * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  -->
-<body>
-    <referenceContainer name="content">
-        <block class="Mavenbird\OrderInformation\Block\Details" name="mavenbird.get.order.details" template="Mavenbird_OrderInformation::order/success.phtml" after="-">
-            <block class="Mavenbird\OrderInformation\Block\Details" name="order.totals" template="Mavenbird_OrderInformation::order/success/totals.phtml">
-                <arguments>
-                    <argument name="label_properties" xsi:type="string">class="table-method"</argument>
-                    <argument name="value_properties" xsi:type="string">class="number"</argument>
-                </arguments>
-                <block class="Mavenbird\OrderInformation\Block\Tax" name="tax" template="Mavenbird_OrderInformation::order/success/tax.phtml"/>
-            </block>
-        </block>
-    </referenceContainer>
-
-    <referenceBlock name="checkout.success" remove="true"/>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Mavenbird_OrderInformation::css/orderinformation.css"/>
     </head>
-        
-</body>
+    <body>
+        <referenceContainer name="content">
+            <block class="Mavenbird\OrderInformation\Block\Details" name="mavenbird.get.order.details" template="Mavenbird_OrderInformation::order/success.phtml" after="-">
+                <block class="Mavenbird\OrderInformation\Block\Details" name="order.totals" template="Mavenbird_OrderInformation::order/success/totals.phtml">
+                    <arguments>
+                        <argument name="label_properties" xsi:type="string">class="table-method"</argument>
+                        <argument name="value_properties" xsi:type="string">class="number"</argument>
+                    </arguments>
+                    <block class="Mavenbird\OrderInformation\Block\Tax" name="tax" template="Mavenbird_OrderInformation::order/success/tax.phtml"/>
+                </block>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="checkout.success" remove="true"/>
+    </body>
+</page>

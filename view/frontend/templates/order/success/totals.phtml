@@ -18,7 +18,8 @@
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  */
 ?>
-<?php foreach ($block->getTotals() as $code => $total): ?>
+<?php $totals = $block->getTotals() ?: []; ?>
+<?php foreach ($totals as $code => $total): ?>
     <?php if ($total->getBlockName()): ?>
         <?= $block->getChildHtml($total->getBlockName(), false); ?>
     <?php else:?>

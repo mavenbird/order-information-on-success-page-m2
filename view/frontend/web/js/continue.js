@@ -17,11 +17,22 @@
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  */
 define([
-    "jquery",
+    "jquery"
 ], function ($) {
-    $(document).ready(function ($) {
-        // Use a more specific selector to avoid conflicts
-        $(".mavenbird-actions-toolbar").addClass('button-continue');
-        $(".mavenbird-button-continue").removeClass('mavenbird-actions-toolbar');
-    });
+    'use strict';
+    
+    return function() {
+        $(document).ready(function () {
+            try {
+                if ($(".mavenbird-actions-toolbar").length) {
+                    $(".mavenbird-actions-toolbar").addClass('button-continue');
+                }
+                if ($(".mavenbird-button-continue").length) {
+                    $(".mavenbird-button-continue").removeClass('mavenbird-actions-toolbar');
+                }
+            } catch (e) {
+                console.error('Error in Mavenbird OrderInformation continue.js: ' + e.message);
+            }
+        });
+    };
 });

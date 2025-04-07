@@ -21,8 +21,12 @@
 <?php /** @var $block \Mavenbird\OrderInformation\Block\Details */ ?>
 <?php
 $order = $block->getOrder();
+if (!$order || !$order->getIncrementId()) {
+    return;
+}
+
 $payment = $order->getPayment();
-$method = $payment->getMethodInstance();
+$method = $payment ? $payment->getMethodInstance() : null;
 $reorderurl = $block->getReorder();
 $printurl = $block->getPrint();
 $date = $order->getCreatedAt();
@@ -30,267 +34,276 @@ $formatdate = $block->formatDate($date);
 $thanksz = $block->getThankMessegerSizeDetails();
 $textbeforesz = $block->getBeforeTextSizeDetails();
 $textaftersz = $block->getAfterTextSizeDetails();
-$thankcl = '#'.$block->getThankMessegerColorDetails();
-$textbeforecl = '#'.$block->getBeforeTextColorDetails();
-$textaftercl = '#'.$block->getAfterTextColorDetails();
+$thankcl = '#' . $block->getThankMessegerColorDetails();
+$textbeforecl = '#' . $block->getBeforeTextColorDetails();
+$textaftercl = '#' . $block->getAfterTextColorDetails();
 $selectedCmsBlock = $block->getCmsBlockDetails();
 $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
 ?>
 <div class="orderSuccess-page">
-<div class="checkout-success">
-<?php if ($order->getIncrementId()):?>
-    <p class="subtext"><?= /* @noEscape */ __('We\'ll email you an order confirmation with details and tracking info.') ?></p>
-    <div class="order-date-status">
-     <?php if ($block->getCustomerId()):?>
-        <div class="orderNumber">
-            <label><?=/* @noEscape */ __('Order #: ')?></label>
-            <?= /* @noEscape */__(
-                ' %1',
-                sprintf(
-                    '<a href="%s" class="order-number">%s</a>',
-                    $block->getReorder(),
-                    $order->getIncrementId()
-                )
-            )    ?>
-        </div>
-        <?php  else:?>
-            <div class="orderNumber"><?= /* @noEscape */ __('Order #: <span>%1</span>.', $order->getIncrementId()) ?></div>
-        <?php endif;?>
-        <span class="sepreter">|</span>
-    <?php endif;?>
-
-    <?php if ($block->isEnableOrderStatusDetails()):?>
-        <div class="order-date">
-            <label class="label"> <?=/* @noEscape */ __('Date: ')?></label>
-            <date><?= /* @noEscape */ $formatdate ?></date>
-        </div>
-        <span class="sepreter">|</span>
-            <div class="status">
-                <label><?=/* @noEscape */ __('Status: ')?></label><span><?= /* @noEscape */$order->getStatusLabel() ; ?></span>
-            </div>
-    <?php endif; ?>
-    </div>
-</div>
-
-<?php if ($block->isEnableDetails()):?>
-    <div class="order-details">
-    <?php $thankMss = $block->getThankMessegerDetails() ?>
-    <p class="tmess">
-        <?= /* @noEscape */$thankMss; ?>
-    </p>    
-
-    <?php $textbefore = $block->getBeforeTextDetails() ?>
-    <div><p class="bmess"><?= /* @noEscape */ $textbefore; ?></p></div>
-<div class="adress-product">
-<div class="shipping_billing_address">
-<div class="info">
-    <?php if ($block->isEnableShippingAddressDetails()):?>
-        <?php $formatship = $block->formatShipping(); ?>
-        <div class="shipping-address">
-            <strong class="box-title">
-                <span class="box-des"><?= /* @noEscape */ __('Shipping Address') ?></span>
-            </strong>
-            <div class="box-content">
-                <?php if ($formatship): ?>
-                    <address><?= /* @noEscape */ $formatship;?></address>
+    <div class="checkout-success">
+        <?php if ($order->getIncrementId()): ?>
+            <p class="subtext"><?= /* @noEscape */ __('We\'ll email you an order confirmation with details and tracking info.') ?></p>
+            <div class="order-date-status">
+                <?php if ($block->getCustomerId()): ?>
+                    <div class="orderNumber">
+                        <label><?= /* @noEscape */ __('Order #: ') ?></label>
+                        <?= /* @noEscape */ __(
+                            ' %1',
+                            sprintf(
+                                '<a href="%s" class="order-number">%s</a>',
+                                $block->getReorder(),
+                                $order->getIncrementId()
+                            )
+                        ) ?>
+                    </div>
                 <?php else: ?>
-                    <?= /* @noEscape */ __('No shipping Address available'); ?>
+                    <div class="orderNumber"><?= /* @noEscape */ __('Order #: <span>%1</span>.', $order->getIncrementId()) ?></div>
                 <?php endif; ?>
-            </div>
-        </div>
-    <?php endif; ?>
-    <?php if ($block->isEnableShippingMethodDetails()):?>
-        <?php $shippingMethod = $order ->getShippingDescription(); ?>
-        <div class="shipping-method">
-            <strong class="box-title">
-                <span class="box-des"><?= /* @noEscape */ __('Shipping Method') ?></span>
-            </strong>
-            <div class="box-content">
-                <?php if ($order->getShippingDescription()): ?>
-                    <?= /* @noEscape */ $shippingMethod; ?>
-                <?php else: ?>
-                    <?= /* @noEscape */ __('No shipping information available'); ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    <?php endif; ?>
-</div>
+                <span class="sepreter">|</span>
+            <?php endif; ?>
 
-<div class="billing-info">
-    <?php if ($block->isEnableBillingAddressDetails()):?>
-        <?php $formatbilling = $block->formatBilling(); ?>
-        <div class="billing-address">
-            <strong class="box-title">
-                <span class="box-des"><?= /* @noEscape */ __('Billing Address') ?></span>
-            </strong>
-            <div class="box-content">
-                <address><?= /* @noEscape */ $formatbilling;  ?></address>
-            </div>
-        </div>
-    <?php endif; ?>
-    <?php if ($block->isEnablePaymentMethodDetails()):?>
-        <?php $methodTitle = $method->getTitle(); ?>
-        <div class="billing-method">
-            <strong class="box-title">
-                <span class="box-des"><?= /* @noEscape */ __('Payment Method') ?></span>
-            </strong>
-            <div class="box-content">
-                <?= /* @noEscape */ $methodTitle ?>
-            </div>
-        </div>
-    <?php endif; ?>
-</div>
-</div>
-<div class="orderSuccess-show">
-    <?php if ($block->isEnableOrderProductDetails()):?>
-    <div class="show-order">
-    <div class="orderSuccess-table table-wrapper">
-        <table cellpadding="0" cellspacing="0" border="0" class="table">
-            <thead>
-                <tr>
-                    <th colspan="1"><?= /* @noEscape */ __('Item') ?></th>
-                    <th><?= /* @noEscape */ __('Price') ?></th>
-                    <th><?= /* @noEscape */ __('Qty') ?></th>
-                    <th><?= /* @noEscape */ __('Subtotal') ?></th>
-                </tr>
-            </thead>
-                <?php $items = $order->getItemsCollection();
-                foreach ($items as $item): ?>
-                    <?php  if ($item->getParentItem()) { continue;} ?>                
-                <tr class="data-item">
-                    <td class="item" class="1">
-                        <div class="orderProduct-inner">
-                            <div class="orderProduct-photo">
-                            <?php $productImage = $block->getImageUrl($item->getProduct(), 'product_thumbnail_image'); ?>
-                            <?php if ($productImage): ?>
-                                <img src="<?= /* @noEscape */ $productImage ?>" alt="<?= $escaper->escapeHtml($item->getName()) ?>" class="small-product-image" />
-                            </div>
-                            <div class="product-item-details">
-                                <?php endif; ?>
-                             <h4><?= /* @noEscape */ $item->getName(); ?></h4>
-                             <?= /* @noEscape */ '<strong>SKU : </strong>' . $item->getSku(); ?>
-                            <?php $options = $block->getItemOptions($item);
-                            if ($options):
-                                foreach ($options as $option): ?>
-                                        <dl>
-                                            <?= /* @noEscape */ $option['label'] ?> : <?= /* @noEscape */ $option['value'] ?>
-                                        </dl>                      
-                                    <?php endforeach;
-                                endif; ?>
-                                
-                            </div>                            
-                        </div>                            
-                    </td>
-                    <td data-th="<?= /* @noEscape */ __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
-                    <td data-th="<?= /* @noEscape */ __('Qty') ?>"><?= /* @noEscape */ $item->getQtyOrdered(); ?></td>
-                    <td data-th="<?= /* @noEscape */ __('Subtotal') ?>"><?= /* @noEscape */ $block->formatPrice($item->getRowTotal(), true, false); ?></td>                    
-                </tr>
-                    <?php
-                    $bundleChildrens = $item->getChildrenItems();
-                    $atts = $block->getBundleItemOptions($item);
-                    $attArray = [];
-                    foreach ($atts as $key => $att) {
-                                $attArray[$att['option_id']] = $att;
-                    }
-                    ksort($attArray);
-                    if ($attArray):
-                        $sku = [];
-                        $countSku= 0;
-                        foreach ($bundleChildrens as $key => $bundleChildren) {
-                            if ($bundleChildren['sku']) {
-                                $countSku ++;
-                            }
-                            $sku[$countSku] = $bundleChildren['sku'];
-                        }
-                        $count = 0;
-                        foreach ($attArray as $att):
-                            ?>
-                <tr>
-            <td colspan="6"><?= /* @noEscape */ $att['label'] ?></td>
-        </tr>  
-                                <?php foreach ($att['value'] as $at): $count++ ?>
-        <tr class="bundle-option">
-            <td colspan="2"><?= /* @noEscape */ $at['qty'].' x '.$at['title'].' x '.$block->formatPrice($at['price']) ?></td>
-            <td><?= /* @noEscape */ $sku[$count]; ?></td>
-            <td colspan="3"><?= /* @noEscape */ __('Ordered: ').$at['qty'] * $item->getQtyOrdered(); ?></td>
-        </tr>
-    <?php endforeach ?>         
-        <?php endforeach ?>
-                <?php endif ?>
-<?php endforeach ?>
-            <tfoot>
-                    <?= $block->getChildHtml('order.totals') ?>
-            </tfoot>
-        </table>
-    </div>
-    </div>
-        <?php endif ?>
-    
-    <div class="text-under">
-        <?php $textafter = $block->getAfterTextDetails() ?>   
-        <p class="fmess"><?= /* @noEscape */ $textafter ?></p>
-        <div class="actions-order">
-            <?php if ($block->canViewReorder()):?>
-            <div class="reorderurl"> 
-                <a class="action-reorder action primary" href="<?= /* @noEscape */ $reorderurl?>">
-                    <span><?= /* @noEscape */ __('Re-Order') ?></span>
-                </a>
+            <?php if ($block->isEnableOrderStatusDetails()): ?>
+                <div class="order-date">
+                    <label class="label"> <?= /* @noEscape */ __('Date: ') ?></label>
+                    <date><?= /* @noEscape */ $formatdate ?></date>
                 </div>
-            <?php endif ?>
-            <?php if ($block->canViewPrint()):?>
-            <div class="printurl">
-                <a class="action-print action primary" href="<?= /* @noEscape */ $printurl ?>" onclick="this.target='_blank';">
-                    <span><?= /* @noEscape */ __('Print Order') ?></span>
-                </a>
+                <span class="sepreter">|</span>
+                <div class="status">
+                    <label><?= /* @noEscape */ __('Status: ') ?></label><span><?= /* @noEscape */ $order->getStatusLabel(); ?></span>
+                </div>
+            <?php endif; ?>
             </div>
-            <?php endif ?>
+    </div>
+
+    <?php if ($block->isEnableDetails()): ?>
+        <div class="order-details">
+            <?php $thankMss = $block->getThankMessegerDetails() ?>
+            <?php if ($thankMss): ?>
+                <p class="tmess">
+                    <?= /* @noEscape */ $thankMss; ?>
+                </p>
+            <?php endif; ?>
+
+            <?php $textbefore = $block->getBeforeTextDetails() ?>
+            <?php if ($textbefore): ?>
+                <div><p class="bmess"><?= /* @noEscape */ $textbefore; ?></p></div>
+            <?php endif; ?>
+            
+            <div class="adress-product">
+                <div class="shipping_billing_address">
+                    <div class="info">
+                        <?php if ($block->isEnableShippingAddressDetails()): ?>
+                            <?php $formatship = $block->formatShipping(); ?>
+                            <div class="shipping-address">
+                                <strong class="box-title">
+                                    <span class="box-des"><?= /* @noEscape */ __('Shipping Address') ?></span>
+                                </strong>
+                                <div class="box-content">
+                                    <?php if ($formatship): ?>
+                                        <address><?= /* @noEscape */ $formatship; ?></address>
+                                    <?php else: ?>
+                                        <?= /* @noEscape */ __('No shipping Address available'); ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($block->isEnableShippingMethodDetails()): ?>
+                            <?php $shippingMethod = $order->getShippingDescription(); ?>
+                            <div class="shipping-method">
+                                <strong class="box-title">
+                                    <span class="box-des"><?= /* @noEscape */ __('Shipping Method') ?></span>
+                                </strong>
+                                <div class="box-content">
+                                    <?php if ($order->getShippingDescription()): ?>
+                                        <?= /* @noEscape */ $shippingMethod; ?>
+                                    <?php else: ?>
+                                        <?= /* @noEscape */ __('No shipping information available'); ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="billing-info">
+                        <?php if ($block->isEnableBillingAddressDetails()): ?>
+                            <?php $formatbilling = $block->formatBilling(); ?>
+                            <div class="billing-address">
+                                <strong class="box-title">
+                                    <span class="box-des"><?= /* @noEscape */ __('Billing Address') ?></span>
+                                </strong>
+                                <div class="box-content">
+                                    <address><?= /* @noEscape */ $formatbilling; ?></address>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($block->isEnablePaymentMethodDetails() && $method): ?>
+                            <?php $methodTitle = $method->getTitle(); ?>
+                            <div class="billing-method">
+                                <strong class="box-title">
+                                    <span class="box-des"><?= /* @noEscape */ __('Payment Method') ?></span>
+                                </strong>
+                                <div class="box-content">
+                                    <?= /* @noEscape */ $methodTitle ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="orderSuccess-show">
+                    <?php if ($block->isEnableOrderProductDetails()): ?>
+                        <div class="show-order">
+                            <div class="orderSuccess-table table-wrapper">
+                                <table cellpadding="0" cellspacing="0" border="0" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="1"><?= /* @noEscape */ __('Item') ?></th>
+                                            <th><?= /* @noEscape */ __('Price') ?></th>
+                                            <th><?= /* @noEscape */ __('Qty') ?></th>
+                                            <th><?= /* @noEscape */ __('Subtotal') ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $items = $order->getItemsCollection();
+                                        foreach ($items as $item): ?>
+                                            <?php if ($item->getParentItem()) {
+                                                continue;
+                                            } ?>
+                                            <tr class="data-item">
+                                                <td class="item">
+                                                    <div class="orderProduct-inner">
+                                                        <div class="orderProduct-photo">
+                                                            <?php $productImage = $block->getImageUrl($item->getProduct(), 'product_thumbnail_image'); ?>
+                                                            <?php if ($productImage): ?>
+                                                                <img src="<?= /* @noEscape */ $productImage ?>" alt="<?= $escaper->escapeHtml($item->getName()) ?>" class="small-product-image" />
+                                                        </div>
+                                                        <div class="product-item-details">
+                                                            <?php endif; ?>
+                                                            <h4><?= /* @noEscape */ $item->getName(); ?></h4>
+                                                            <?= /* @noEscape */ '<strong>SKU : </strong>' . $item->getSku(); ?>
+                                                            <?php $options = $block->getItemOptions($item);
+                                                            if ($options):
+                                                                foreach ($options as $option): ?>
+                                                                    <dl>
+                                                                        <?= /* @noEscape */ $option['label'] ?> : <?= /* @noEscape */ $option['value'] ?>
+                                                                    </dl>
+                                                                <?php endforeach;
+                                                            endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td data-th="<?= /* @noEscape */ __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
+                                                <td data-th="<?= /* @noEscape */ __('Qty') ?>"><?= /* @noEscape */ $item->getQtyOrdered(); ?></td>
+                                                <td data-th="<?= /* @noEscape */ __('Subtotal') ?>"><?= /* @noEscape */ $block->formatPrice($item->getRowTotal(), true, false); ?></td>
+                                            </tr>
+                                            <?php
+                                            $bundleChildrens = $item->getChildrenItems();
+                                            $atts = $block->getBundleItemOptions($item);
+                                            $attArray = [];
+                                            foreach ($atts as $key => $att) {
+                                                $attArray[$att['option_id']] = $att;
+                                            }
+                                            ksort($attArray);
+                                            if ($attArray):
+                                                $sku = [];
+                                                $countSku = 0;
+                                                foreach ($bundleChildrens as $key => $bundleChildren) {
+                                                    if ($bundleChildren['sku']) {
+                                                        $countSku++;
+                                                    }
+                                                    $sku[$countSku] = $bundleChildren['sku'];
+                                                }
+                                                $count = 0;
+                                                foreach ($attArray as $att):
+                                                    ?>
+                                                    <tr>
+                                                        <td colspan="6"><?= /* @noEscape */ $att['label'] ?></td>
+                                                    </tr>
+                                                    <?php foreach ($att['value'] as $at): $count++ ?>
+                                                        <tr class="bundle-option">
+                                                            <td colspan="2"><?= /* @noEscape */ $at['qty'] . ' x ' . $at['title'] . ' x ' . $block->formatPrice($at['price']) ?></td>
+                                                            <td><?= /* @noEscape */ isset($sku[$count]) ? $sku[$count] : ''; ?></td>
+                                                            <td colspan="3"><?= /* @noEscape */ __('Ordered: ') . $at['qty'] * $item->getQtyOrdered(); ?></td>
+                                                        </tr>
+                                                    <?php endforeach ?>
+                                                <?php endforeach ?>
+                                            <?php endif ?>
+                                        <?php endforeach ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <?= $block->getChildHtml('order.totals') ?>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    <?php endif ?>
+
+                    <div class="text-under">
+                        <?php $textafter = $block->getAfterTextDetails() ?>
+                        <?php if ($textafter): ?>
+                            <p class="fmess"><?= /* @noEscape */ $textafter ?></p>
+                        <?php endif; ?>
+                        <div class="actions-order">
+                            <?php if ($block->canViewReorder()): ?>
+                                <div class="reorderurl">
+                                    <a class="action-reorder action primary" href="<?= /* @noEscape */ $reorderurl ?>">
+                                        <span><?= /* @noEscape */ __('Re-Order') ?></span>
+                                    </a>
+                                </div>
+                            <?php endif ?>
+                            <?php if ($block->canViewPrint()): ?>
+                                <div class="printurl">
+                                    <a class="action-print action primary" href="<?= /* @noEscape */ $printurl ?>" onclick="this.target='_blank';">
+                                        <span><?= /* @noEscape */ __('Print Order') ?></span>
+                                    </a>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                    </div>
+                    <div class="mavenbird-actions-toolbar">
+                        <a class="action primary continue" href="<?= /* @noEscape */ $block->getUrl() ?>">
+                            <span><?= /* @noEscape */ __('Continue Shopping') ?></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="actions-toolbar">
-        <a class="action primary continue" href="<?= /* @noEscape */ $block->getUrl() ?>">
-            <span><?= /* @noEscape */ __('Continue Shopping') ?></span>
-        </a>
-    </div>
-    </div>    
-    
-</div>
-<?php endif; ?>
+    <?php endif; ?>
 
-</div>
+    <?php if ($block->isCmsBlockEnabled() && $selectedCmsBlock): ?>
+        <div class="cms-block">
+            <?= $block->getLayout()->createBlock(\Magento\Cms\Block\Block::class)->setBlockId($selectedCmsBlock)->toHtml(); ?>
+        </div>
+    <?php endif; ?>
 
-<?php if ($block->isCmsBlockEnabled()): ?>
-    <div class="cms-block">
-        <?= $block->getLayout()->createBlock(\Magento\Cms\Block\Block::class)->setBlockId($selectedCmsBlock)->toHtml(); ?>
-    </div>
-<?php endif; ?>
-
-<?php if ($block->isSecondCmsBlockEnabled()): ?>
-    <div class="cms-block">
-        <?= $block->getLayout()->createBlock(\Magento\Cms\Block\Block::class)->setBlockId($selectedSecondCmsBlock)->toHtml(); ?>
-    </div>
-<?php endif; ?>
+    <?php if ($block->isSecondCmsBlockEnabled() && $selectedSecondCmsBlock): ?>
+        <div class="cms-block">
+            <?= $block->getLayout()->createBlock(\Magento\Cms\Block\Block::class)->setBlockId($selectedSecondCmsBlock)->toHtml(); ?>
+        </div>
+    <?php endif; ?>
 </div>
 
-<?php if ($block->isEnableDetails()): ?>    
-<script type="text/x-magento-init">
-        {
+<?php if ($block->isEnableDetails()): ?>
+    <script type="text/x-magento-init">
+    {
         "*": {
             "Mavenbird_OrderInformation/js/continue": {}
-            }
-        } 
-</script>
+        }
+    }
+    </script>
 <?php endif; ?>
+
 <style type="text/css">
-    .tmess{
-        font-size: <?= /* @noEscape */ $thanksz.'px' ?>;
+    .tmess {
+        font-size: <?= /* @noEscape */ $thanksz . 'px' ?>;
         color: <?= /* @noEscape */ $thankcl ?>;
     }
-    .bmess{
-        font-size: <?= /* @noEscape */ $textbeforesz.'px' ?>;
+    .bmess {
+        font-size: <?= /* @noEscape */ $textbeforesz . 'px' ?>;
         color: <?= /* @noEscape */ $textbeforecl ?>;
     }
-    .fmess{
-        font-size: <?= /* @noEscape */ $textaftersz.'px' ?>;
+    .fmess {
+        font-size: <?= /* @noEscape */ $textaftersz . 'px' ?>;
         color: <?= /* @noEscape */ $textaftercl ?>;
     }
 </style>

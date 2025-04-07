@@ -19,316 +19,497 @@
  */
 namespace Mavenbird\OrderInformation\Block;
 
-class Details extends \Magento\Sales\Block\Order\Totals
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Sales\Model\Order\Address\Renderer as AddressRenderer;
+use Magento\Framework\Registry;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Catalog\Helper\Image;
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Pricing\Helper\Data as PriceHelper;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Sales\Model\Order\Config;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\App\ObjectManager;
+
+class Details extends Template
 {
     /**
-     * Get Checkout Session
-     * @var \Magento\Checkout\Model\Session
+     * @var CheckoutSession
      */
     protected $checkoutSession;
 
     /**
-     * Get Customer Session
-     * @var \Magento\Customer\Model\Session
+     * @var AddressRenderer
+     */
+    protected $addressRenderer;
+
+    /**
+     * Core registry
+     *
+     * @var Registry
+     */
+    protected $coreRegistry = null;
+
+    /**
+     * @var CustomerSession
      */
     protected $customerSession;
 
     /**
-     * Sales Factory
-     * @var \Magento\Sales\Model\OrderFactory
+     * @var Image
      */
-    protected $_orderFactory;
+    protected $imageHelper;
 
     /**
-     * Order Address
-     * @var \Magento\Sales\Model\Order\Address\Renderer
+     * @var ProductRepository
      */
-    protected $render;
+    protected $productRepository;
 
     /**
-     * Mavenbird Helper Data
-     * @var \Mavenbird\OrderInformation\Helper\Data
+     * @var PriceHelper
      */
-    protected $helper;
+    protected $priceHelper;
 
     /**
-     * Pricing Helper Data
-     * @var \Magento\Framework\Pricing\Helper\Data
+     * @var StoreManagerInterface
      */
-    protected $formatPrice;
+    protected $storeManager;
 
     /**
-     * Undocumented variable
-     *
-     * @var \Psr\Log\LoggerInterface
+     * @var ScopeConfigInterface
      */
-    protected $logger;
+    protected $scopeConfig;
 
     /**
-     * Order Details Constructor
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Mavenbird\OrderInformation\Helper\Data $helper
-     * @param \Magento\Sales\Model\Order\Address\Renderer $render
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Pricing\Helper\Data $formatPrice
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
-     * @param \Psr\Log\LoggerInterface $logger
+     * @var Config
+     */
+    protected $orderConfig;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $orderCollectionFactory;
+
+    /**
+     * @var TimezoneInterface
+     */
+    protected $localeDate;
+
+    /**
+     * @param Context $context
+     * @param CheckoutSession $checkoutSession
+     * @param AddressRenderer $addressRenderer
+     * @param Registry $registry
+     * @param CustomerSession $customerSession
+     * @param Image $imageHelper
+     * @param ProductRepository $productRepository
+     * @param PriceHelper $priceHelper
+     * @param StoreManagerInterface $storeManager
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Config $orderConfig
+     * @param CollectionFactory $orderCollectionFactory
+     * @param TimezoneInterface $localeDate
      * @param array $data
      */
     public function __construct(
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Sales\Model\OrderFactory $orderFactory,
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Mavenbird\OrderInformation\Helper\Data $helper,
-        \Magento\Sales\Model\Order\Address\Renderer $render,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Pricing\Helper\Data $formatPrice,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Psr\Log\LoggerInterface $logger,
+        Context $context,
+        CheckoutSession $checkoutSession,
+        AddressRenderer $addressRenderer,
+        Registry $registry,
+        CustomerSession $customerSession,
+        Image $imageHelper,
+        ProductRepository $productRepository,
+        PriceHelper $priceHelper,
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $scopeConfig,
+        Config $orderConfig,
+        CollectionFactory $orderCollectionFactory,
+        TimezoneInterface $localeDate,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $data);
         $this->checkoutSession = $checkoutSession;
+        $this->addressRenderer = $addressRenderer;
+        $this->coreRegistry = $registry;
         $this->customerSession = $customerSession;
-        $this->_orderFactory = $orderFactory;
-        $this->render = $render;
-        $this->helper = $helper;
-        $this->formatPrice = $formatPrice;
-        $this->_scopeConfig = $scopeConfig;
+        $this->imageHelper = $imageHelper;
         $this->productRepository = $productRepository;
-        $this->logger = $logger;
-    }
-    
-    /**
-     * Undocumented function
-     *
-     * @param [type] $product
-     * @param [type] $imageType
-     * @return void
-     */
-    public function getImageUrl($product, $imageType)
-    {
-        $imageUrl = false;
-        try {
-            $product = $this->productRepository->getById($product->getId());
-            $image = $product->getMediaGalleryImages()->getItemByColumnValue('media_type', 'image');
-            if ($image) {
-                $imageUrl = $this->getUrl('pub/media/catalog') . 'product' . $image->getFile();
-            }
-        } catch (\Exception $e) {
-            $this->logger->error('Error getting image URL: ' . $e->getMessage());
-        }
-        return $imageUrl;
-    }
-    /**
-     * Is Cms Block Enable
-     *
-     * @return boolean
-     */
-    public function isCmsBlockEnabled()
-    {
-        return $this->_scopeConfig->getValue(
-            'order_details/custom_block_config/enable_cms_block_1',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-    }
-    /**
-     * Is second Cms Block Enable
-     *
-     * @return boolean
-     */
-    public function isSecondCmsBlockEnabled()
-    {
-        return $this->_scopeConfig->getValue(
-            'order_details/custom_block_config/enable_cms_block_2',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-    }
-    /**
-     * Get Cms Block Details
-     *
-     * @return void
-     */
-    public function getCmsBlockDetails()
-    {
-        return $this->_scopeConfig->getValue('order_details/custom_block_config/cms_block', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-    }
-    /**
-     * Get Second Cms Block Details
-     *
-     * @return void
-     */
-    public function getSecondCmsBlockDetails()
-    {
-        return $this->_scopeConfig->getValue('order_details/custom_block_config/second_cms_block', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $this->priceHelper = $priceHelper;
+        $this->storeManager = $storeManager;
+        $this->scopeConfig = $scopeConfig;
+        $this->orderConfig = $orderConfig;
+        $this->orderCollectionFactory = $orderCollectionFactory;
+        $this->localeDate = $localeDate;
+        parent::__construct($context, $data);
     }
 
     /**
-     * Get last order id
+     * Get current order
      *
-     * @return string
+     * @return \Magento\Sales\Model\Order
      */
     public function getOrder()
     {
-        return  $this->_order = $this->_orderFactory->create()->loadByIncrementId(
-            $this->checkoutSession->getLastRealOrderId()
-        );
+        return $this->checkoutSession->getLastRealOrder();
     }
 
     /**
-     * Get Enable|Disable
+     * Format price
+     *
+     * @param float $price
+     * @param bool $includeContainer
+     * @param bool $format
+     * @return float
+     */
+    public function formatPrice($price, $includeContainer = true, $format = true)
+    {
+        return $this->priceHelper->currency($price, $includeContainer, $format);
+    }
+
+    /**
+     * Format shipping address
+     *
+     * @return string|null
+     */
+    public function formatShipping()
+    {
+        $order = $this->getOrder();
+        $shipping = $order->getShippingAddress();
+        return $shipping ? $this->addressRenderer->format($shipping, 'html') : null;
+    }
+
+    /**
+     * Format billing address
+     *
+     * @return string|null
+     */
+    public function formatBilling()
+    {
+        $order = $this->getOrder();
+        $billing = $order->getBillingAddress();
+        return $billing ? $this->addressRenderer->format($billing, 'html') : null;
+    }
+
+    /**
+     * Get product image URL
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @param string $imageId
+     * @return string
+     */
+    public function getImageUrl($product, $imageId = 'product_thumbnail_image')
+    {
+        try {
+            return $this->imageHelper->init($product, $imageId)->getUrl();
+        } catch (\Exception $e) {
+            return $this->imageHelper->getDefaultPlaceholderUrl('thumbnail');
+        }
+    }
+
+    /**
+     * Get item options
+     *
+     * @param \Magento\Sales\Model\Order\Item $item
+     * @return array
+     */
+    public function getItemOptions($item)
+    {
+        $result = [];
+        $options = $item->getProductOptions();
+        if ($options) {
+            if (isset($options['options'])) {
+                $result = array_merge($result, $options['options']);
+            }
+            if (isset($options['additional_options'])) {
+                $result = array_merge($result, $options['additional_options']);
+            }
+            if (isset($options['attributes_info'])) {
+                $result = array_merge($result, $options['attributes_info']);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Get bundle item options
+     *
+     * @param \Magento\Sales\Model\Order\Item $item
+     * @return array
+     */
+    public function getBundleItemOptions($item)
+    {
+        $result = [];
+        $options = $item->getProductOptions();
+        if ($options) {
+            if (isset($options['bundle_options'])) {
+                $result = $options['bundle_options'];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Get customer ID
+     *
+     * @return int|null
+     */
+    public function getCustomerId()
+    {
+        return $this->customerSession->isLoggedIn() ? $this->customerSession->getCustomerId() : null;
+    }
+
+    /**
+     * Get reorder URL
+     *
+     * @return string
+     */
+    public function getReorder()
+    {
+        $order = $this->getOrder();
+        return $this->getUrl('sales/order/view', ['order_id' => $order->getId()]);
+    }
+
+    /**
+     * Get print URL
+     *
+     * @return string
+     */
+    public function getPrint()
+    {
+        $order = $this->getOrder();
+        return $this->getUrl('sales/order/print', ['order_id' => $order->getId()]);
+    }
+
+    /**
+     * Check if details are enabled
      *
      * @return bool
      */
     public function isEnableDetails()
     {
-        return $this->helper->isEnable();
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/enable',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Thanks Messeger
-     *
-     * @return string
-     */
-    public function getThankMessegerDetails()
-    {
-        return $this->helper->getThankMesseger();
-    }
-
-    /**
-     * Get Enable|Disable Order Status
-     *
-     * @return bool
-     */
-    public function isEnableOrderStatusDetails()
-    {
-        return $this->helper->isEnableOrderStatus();
-    }
-
-    /**
-     * Get Text Before Order
-     *
-     * @return string
-     */
-    public function getBeforeTextDetails()
-    {
-        return $this->helper->getBeforeText();
-    }
-
-    /**
-     * Get Text After Order
-     *
-     * @return string
-     */
-    public function getAfterTextDetails()
-    {
-        return $this->helper->getAfterText();
-    }
-
-    /**
-     * Get Enable|Disable Shipping Address
-     *
-     * @return bool
-     */
-    public function isEnableShippingAddressDetails()
-    {
-        return $this->helper->isEnableShippingAddress();
-    }
-
-    /**
-     * Get Enable|Disable Shipping Method
-     *
-     * @return bool
-     */
-    public function isEnableShippingMethodDetails()
-    {
-        return $this->helper->isEnableShippingMethod();
-    }
-
-    /**
-     * Get Enable|Disable BiLLing Address
-     *
-     * @return bool
-     */
-    public function isEnableBillingAddressDetails()
-    {
-        return $this->helper->isEnableBillingAddress();
-    }
-
-    /**
-     * Get Enable|Disable Payment Method
-     *
-     * @return bool
-     */
-    public function isEnablePaymentMethodDetails()
-    {
-        return $this->helper->isEnablePaymentMethod();
-    }
-
-    /**
-     * Get Enable|Disable Product Details
+     * Check if order product details are enabled
      *
      * @return bool
      */
     public function isEnableOrderProductDetails()
     {
-        return $this->helper->isEnableOrderProduct();
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_order_product',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Thank Messeger Size
+     * Check if shipping address is enabled
+     *
+     * @return bool
+     */
+    public function isEnableShippingAddressDetails()
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_shipping_address',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if shipping method is enabled
+     *
+     * @return bool
+     */
+    public function isEnableShippingMethodDetails()
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_shipping_method',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if billing address is enabled
+     *
+     * @return bool
+     */
+    public function isEnableBillingAddressDetails()
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_billing_address',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if payment method is enabled
+     *
+     * @return bool
+     */
+    public function isEnablePaymentMethodDetails()
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_payment_method',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if print order link is enabled
+     *
+     * @return bool
+     */
+    public function canViewPrint()
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_print_order_link',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if reorder link is enabled
+     *
+     * @return bool
+     */
+    public function canViewReorder()
+    {
+        $isReorderEnabled = $this->scopeConfig->getValue(
+            'sales/reorder/allow',
+            ScopeInterface::SCOPE_STORE
+        );
+        $isReorderLinkEnabled = $this->scopeConfig->getValue(
+            'order_details/general/show_reorder_link',
+            ScopeInterface::SCOPE_STORE
+        );
+        
+        return $this->customerSession->isLoggedIn() && $isReorderEnabled && $isReorderLinkEnabled;
+    }
+
+    /**
+     * Check if order status is enabled
+     *
+     * @return bool
+     */
+    public function isEnableOrderStatusDetails()
+    {
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/general/show_order_status',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get thank you message
+     *
+     * @return string
+     */
+    public function getThankMessegerDetails()
+    {
+        return $this->scopeConfig->getValue(
+            'order_details/thank_cofig/thank_messager',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get before text
+     *
+     * @return string
+     */
+    public function getBeforeTextDetails()
+    {
+        return $this->scopeConfig->getValue(
+            'order_details/before_config/text_before',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get after text
+     *
+     * @return string
+     */
+    public function getAfterTextDetails()
+    {
+        return $this->scopeConfig->getValue(
+            'order_details/after_config/text_after',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get thank you message size
      *
      * @return string
      */
     public function getThankMessegerSizeDetails()
     {
-        return $this->helper->getThankMessegerSize();
+        return $this->scopeConfig->getValue(
+            'order_details/thank_cofig/size_thanks',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Text Before Size
+     * Get before text size
      *
      * @return string
      */
     public function getBeforeTextSizeDetails()
     {
-        return $this->helper->getBeforeTextSize();
+        return $this->scopeConfig->getValue(
+            'order_details/before_config/size_before_text',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Text After Size
+     * Get after text size
      *
      * @return string
      */
     public function getAfterTextSizeDetails()
     {
-        return $this->helper->getAfterTextSize();
+        return $this->scopeConfig->getValue(
+            'order_details/after_config/size_after_text',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Thank Messeger Color
+     * Get thank you message color
      *
      * @return string
      */
     public function getThankMessegerColorDetails()
     {
-        return $this->helper->getThankMessegerColor();
+        return $this->scopeConfig->getValue(
+            'order_details/thank_cofig/color_thanks',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Text Before Color
+     * Get before text color
      *
      * @return string
      */
     public function getBeforeTextColorDetails()
     {
-        return $this->helper->getBeforeTextColor();
+        return $this->scopeConfig->getValue(
+            'order_details/before_config/color_text_before',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -338,188 +519,125 @@ class Details extends \Magento\Sales\Block\Order\Totals
      */
     public function getAfterTextColorDetails()
     {
-        return $this->helper->getAfterTextColor();
+        return $this->scopeConfig->getValue(
+            'order_details/after_config/color_text_after',
+        ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Get Customer Id
-     *
-     * @return string
-     */
-    public function getCustomerId()
-    {
-        if ($this->customerSession->isLoggedIn()) {
-            return $this->customerSession->getCustomer()->getId();
-        }
-        return null;
-    }
-
-    /**
-     * Render Block
-     *
-     * @return string
-     */
-    public function getAdditionalInfoHtml()
-    {
-        return $this->_layout->renderElement('order.success.additional.info');
-    }
-
-    /**
-     * Format Price
-     *
-     * @param float $value
-     * @return float
-     */
-    public function formatPrice($value)
-    {
-        return $this->formatPrice->currency($value, true, false);
-    }
-
-    /**
-     * Get Re-Order
-     *
-     * @return string
-     */
-    public function getReorder()
-    {
-        $order = $this->getOrder();
-        $orderID = $order -> getId();
-        $reorder = $this->getBaseUrl().'sales/order/view/order_id/'.$orderID;
-        return $reorder;
-    }
-
-    /**
-     * Get Print Order
-     *
-     * @return string
-     */
-    public function getPrint()
-    {
-        $order = $this->getOrder();
-        $orderID = $order -> getId();
-        $print = $this->getBaseUrl().'sales/order/print/order_id/'.$orderID;
-        return $print;
-    }
-
-    /**
-     * Can View Re-Order
+     * Check if CMS block is enabled
      *
      * @return bool
      */
-    public function canViewReorder()
+    public function isCmsBlockEnabled()
     {
-        if ($this->helper->isEnableReOrderLink() && $this->helper->isEnableReOrder() && $this->getCustomerId()) {
-            return true;
-        }
-            return false;
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/custom_block_config/enable_cms_block_1',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Can View Print Order
+     * Get CMS block identifier
+     *
+     * @return string
+     */
+    public function getCmsBlockDetails()
+    {
+        return $this->scopeConfig->getValue(
+            'order_details/custom_block_config/cms_block',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if second CMS block is enabled
      *
      * @return bool
      */
-    public function canViewPrint()
+    public function isSecondCmsBlockEnabled()
     {
-        if ($this->helper->isEnablePrintOrderLink() && $this->getCustomerId()) {
-            return true;
-        }
-        return false;
+        return (bool)$this->scopeConfig->getValue(
+            'order_details/custom_block_config/enable_cms_block_2',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
-     * Format Shipping Address
+     * Get second CMS block identifier
      *
      * @return string
      */
-    public function formatShipping()
+    public function getSecondCmsBlockDetails()
+    {
+        return $this->scopeConfig->getValue(
+            'order_details/custom_block_config/second_cms_block',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get order totals
+     *
+     * @return array
+     */
+    public function getTotals()
     {
         $order = $this->getOrder();
-        if ($order->getShippingAddress()) {
-            return $this->render->format($order->getShippingAddress(), 'html');
+        if (!$order) {
+            return [];
         }
-            return false;
-    }
-
-    /**
-     * Format Billing Address
-     *
-     * @return string
-     */
-    public function formatBilling()
-    {
-            $order = $this->getOrder();
-            return $this->render->format($order->getBillingAddress(), 'html');
-    }
-
-    /**
-     * Format date
-     *
-     * @param string $date
-     * @param string $format
-     * @param bool $showTime
-     * @param string $timezone
-     * @param string $pattern
-     * @return string
-     */
-    public function formatDate(
-        $date = null,
-        $format = \IntlDateFormatter::SHORT,
-        $showTime = false,
-        $timezone = null,
-        $pattern = 'd MMM Y'
-    ) {
         
-            $date = $date instanceof \DateTimeInterface;
-            return $this->_localeDate->formatDateTime(
-                $date,
-                $format,
-                $showTime ? $format : \IntlDateFormatter::NONE,
-                null,
-                $timezone,
-                $pattern
-            );
+        $totals = [];
+        
+        // Add subtotal
+        $totals['subtotal'] = new \Magento\Framework\DataObject([
+            'code' => 'subtotal',
+            'value' => $order->getSubtotal(),
+            'label' => __('Subtotal')
+        ]);
+        
+        // Add shipping
+        if (!$order->getIsVirtual() && ((float)$order->getShippingAmount() || $order->getShippingDescription())) {
+            $totals['shipping'] = new \Magento\Framework\DataObject([
+                'code' => 'shipping',
+                'value' => $order->getShippingAmount(),
+                'label' => __('Shipping & Handling')
+            ]);
+        }
+        
+        // Add discount
+        if ((float)$order->getDiscountAmount() != 0) {
+            $totals['discount'] = new \Magento\Framework\DataObject([
+                'code' => 'discount',
+                'value' => $order->getDiscountAmount(),
+                'label' => __('Discount')
+            ]);
+        }
+        
+        // Add grand total
+        $totals['grand_total'] = new \Magento\Framework\DataObject([
+            'code' => 'grand_total',
+            'value' => $order->getGrandTotal(),
+            'label' => __('Grand Total'),
+            'strong' => true
+        ]);
+        
+        return $totals;
     }
 
     /**
-     * Return Opptions Configurable Product
+     * Format total value based on order currency
      *
-     * @param object $item
-     * @return array
+     * @param \Magento\Framework\DataObject $total
+     * @return string
      */
-    public function getItemOptions($item)
+    public function formatValue($total)
     {
-        $result = [];
-        $option = $item->getProductOptions();
-        if ($option) {
-            if (isset($option['options'])) {
-                    $result = array_merge($result, $option['options']);
-            }
-            if (isset($option['additional_options'])) {
-                    $result = array_merge($result, $option['additional_options']);
-            }
-            if (isset($option['attributes_info'])) {
-                    $result = array_merge($result, $option['attributes_info']);
-            }
+        if (!$total->getIsFormated()) {
+            return $this->formatPrice($total->getValue());
         }
-        return $result;
-    }
-
-    /**
-     * Return Opptions Bundle Product
-     *
-     * @param object $item
-     * @return array
-     */
-    public function getBundleItemOptions($item)
-    {
-        $result = [];
-        $option = $item->getProductOptions();
-        if ($option) {
-            if (isset($option['bundle_options'])) {
-                $result = array_merge($result, $option['bundle_options']);
-            }
-        }
-        return $result;
+        return $total->getValue();
     }
 }
