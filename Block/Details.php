@@ -36,6 +36,8 @@ use Magento\Sales\Model\Order\Config;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Sales\Model\OrderFactory;
+
 
 class Details extends Template
 {
@@ -102,6 +104,13 @@ class Details extends Template
     protected $localeDate;
 
     /**
+     * Factory for orders
+     *
+     * @var [type]
+     */
+    protected $orderFactory;
+
+    /**
      * @param Context $context
      * @param CheckoutSession $checkoutSession
      * @param AddressRenderer $addressRenderer
@@ -131,6 +140,7 @@ class Details extends Template
         Config $orderConfig,
         CollectionFactory $orderCollectionFactory,
         TimezoneInterface $localeDate,
+        OrderFactory $orderFactory,
         array $data = []
     ) {
         $this->checkoutSession = $checkoutSession;
@@ -145,6 +155,7 @@ class Details extends Template
         $this->orderConfig = $orderConfig;
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->localeDate = $localeDate;
+        $this->orderFactory = $orderFactory;
         parent::__construct($context, $data);
     }
 
@@ -639,5 +650,32 @@ class Details extends Template
             return $this->formatPrice($total->getValue());
         }
         return $total->getValue();
+    }
+
+    public function getOrderId()
+    {
+        $order = $this->getOrder();
+        return $order ? $order->getIncrementId() : null;
+    }
+
+    public function getOrderData()
+    {
+        $orderId = $this->getOrderId();
+        if (!$orderId) {
+            return [];
+        }
+
+        $order = $this->orderFactory->create()->load($orderId);
+        $items = [];
+
+        foreach ($order->getAllVisibleItems() as $item) {
+            $items[] = [
+                'name' => $item->getName(),
+                'qty' => (int)$item->getQtyOrdered(),
+                'price' => $order->formatPrice($item->getPrice())
+            ];
+        }
+
+        return ['items' => $items];
     }
 }

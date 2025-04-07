@@ -24,7 +24,15 @@ $order = $block->getOrder();
 if (!$order || !$order->getIncrementId()) {
     return;
 }
+if ($order->getIncrementId()): ?>
+    <div id="checkout-success" style="display:none;">
+        <div class="checkout-success">
+            <p><?= $block->escapeHtml(__('Your order number is: %1.', $order->getIncrementId())) ?></p>
+        </div>
+    </div>
+<?php endif; ?>
 
+<?php
 $payment = $order->getPayment();
 $method = $payment ? $payment->getMethodInstance() : null;
 $reorderurl = $block->getReorder();
@@ -192,7 +200,7 @@ $selectedSecondCmsBlock = $block->getSecondCmsBlockDetails();
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td data-th="<?= /* @noEscape */ __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
+ <td data-th="<?= /* @noEscape */ __('Price') ?>"><?= /* @noEscape */ $block->formatPrice($item->getPrice(), true, false); ?></td>
                                                 <td data-th="<?= /* @noEscape */ __('Qty') ?>"><?= /* @noEscape */ $item->getQtyOrdered(); ?></td>
                                                 <td data-th="<?= /* @noEscape */ __('Subtotal') ?>"><?= /* @noEscape */ $block->formatPrice($item->getRowTotal(), true, false); ?></td>
                                             </tr>
