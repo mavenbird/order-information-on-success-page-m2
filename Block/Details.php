@@ -17,6 +17,7 @@
  * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  */
+
 namespace Mavenbird\OrderInformation\Block;
 
 use Magento\Framework\View\Element\Template;
@@ -111,6 +112,8 @@ class Details extends Template
     protected $orderFactory;
 
     /**
+     * Construct
+     *
      * @param Context $context
      * @param CheckoutSession $checkoutSession
      * @param AddressRenderer $addressRenderer
@@ -124,6 +127,7 @@ class Details extends Template
      * @param Config $orderConfig
      * @param CollectionFactory $orderCollectionFactory
      * @param TimezoneInterface $localeDate
+     * @param OrderFactory $orderFactory
      * @param array $data
      */
     public function __construct(
@@ -652,12 +656,22 @@ class Details extends Template
         return $total->getValue();
     }
 
+    /**
+     * Get Order Id
+     *
+     * @return void
+     */
     public function getOrderId()
     {
         $order = $this->getOrder();
         return $order ? $order->getIncrementId() : null;
     }
 
+    /**
+     * Get Order Data
+     *
+     * @return void
+     */
     public function getOrderData()
     {
         $orderId = $this->getOrderId();

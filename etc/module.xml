@@ -18,7 +18,7 @@
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mavenbird_OrderInformation" setup_version="1.0.0">
+    <module name="Mavenbird_OrderInformation" setup_version="1.1.0">
         <sequence>
             <module name="Magento_Checkout"/>
             <module name="Magento_Sales"/>

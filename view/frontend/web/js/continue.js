@@ -24,15 +24,12 @@ define([
     return function() {
         $(document).ready(function () {
             try {
-                // Only apply changes if our elements exist
                 if ($(".mavenbird-actions-toolbar").length) {
                     $(".mavenbird-actions-toolbar").addClass('button-continue');
                 }
                 if ($(".mavenbird-button-continue").length) {
                     $(".mavenbird-button-continue").removeClass('mavenbird-actions-toolbar');
                 }
-                
-                // Ensure we don't interfere with core checkout functionality
                 $(".checkout-success .actions-toolbar").not(".mavenbird-actions-toolbar").css('display', 'block');
             } catch (e) {
                 console.error('Error in Mavenbird OrderInformation continue.js: ' + e.message);

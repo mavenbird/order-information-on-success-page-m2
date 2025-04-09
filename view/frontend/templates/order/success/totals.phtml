@@ -21,17 +21,17 @@
 <?php $totals = $block->getTotals() ?: []; ?>
 <?php foreach ($totals as $code => $total): ?>
     <?php if ($total->getBlockName()): ?>
-        <?= $block->getChildHtml($total->getBlockName(), false); ?>
+        <?=  /* @noEscape */ $block->getChildHtml($total->getBlockName(), false); ?>
     <?php else:?>
     <tr class="<?= /* @noEscape */ $code?>">
         <th class="mark" colspan="3" <?= /* @noEscape */ $block->getLabelProperties()?> scope="row">
             <?php if ($total->getStrong()):?>
-            <strong><?= $escaper->escapeHtml($total->getLabel());?></strong>
+            <strong><?=  /* @noEscape */ $escaper->escapeHtml($total->getLabel());?></strong>
             <?php else:?>
-                <?= $escaper->escapeHtml($total->getLabel());?>
+                <?=  /* @noEscape */ $escaper->escapeHtml($total->getLabel());?>
             <?php endif?>
         </th>
-        <td class="amount" <?= /* @noEscape */ $block->getValueProperties()?> data-th="<?= $escaper->escapeHtml($total->getLabel());?>">
+        <td class="amount" <?= /* @noEscape */ $block->getValueProperties()?> data-th="<?= /* @noEscape */ $escaper->escapeHtml($total->getLabel());?>">
             <?php if ($total->getStrong()):?>
             <strong><?= /* @noEscape */ $block->formatValue($total) ?></strong>
             <?php else:?>

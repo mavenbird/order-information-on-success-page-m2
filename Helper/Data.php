@@ -17,6 +17,7 @@
  * @copyright  Copyright (c) 2018-2024 Mavenbird Technologies Private Limited ( http://mavenbird.com )
  * @license    http://mavenbird.com/Mavenbird-Module-License.txt
  */
+
 namespace Mavenbird\OrderInformation\Helper;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
