@@ -173,16 +173,22 @@ class Details extends Template
         return $this->checkoutSession->getLastRealOrder();
     }
 
-    /**
+   /**
      * Format price
      *
      * @param float $price
      * @param bool $includeContainer
      * @param bool $format
-     * @return float
+     * @return string
      */
     public function formatPrice($price, $includeContainer = true, $format = true)
     {
+        $order = $this->getOrder();
+        if ($order) {
+            return $order->formatPrice($price, $includeContainer);
+        }
+        
+        // Fallback to price helper if no order available
         return $this->priceHelper->currency($price, $includeContainer, $format);
     }
 
@@ -651,10 +657,16 @@ class Details extends Template
     public function formatValue($total)
     {
         if (!$total->getIsFormated()) {
+            $order = $this->getOrder();
+            if ($order) {
+                // Use order's currency for proper formatting
+                return $order->formatPrice($total->getValue());
+            }
             return $this->formatPrice($total->getValue());
         }
         return $total->getValue();
     }
+
 
     /**
      * Get Order Id
@@ -670,18 +682,16 @@ class Details extends Template
     /**
      * Get Order Data
      *
-     * @return void
+     * @return array
      */
     public function getOrderData()
     {
-        $orderId = $this->getOrderId();
-        if (!$orderId) {
+        $order = $this->getOrder();
+        if (!$order || !$order->getId()) {
             return [];
         }
 
-        $order = $this->orderFactory->create()->load($orderId);
         $items = [];
-
         foreach ($order->getAllVisibleItems() as $item) {
             $items[] = [
                 'name' => $item->getName(),
@@ -692,4 +702,5 @@ class Details extends Template
 
         return ['items' => $items];
     }
+
 }
