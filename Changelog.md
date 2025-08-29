@@ -1,4 +1,4 @@
-1.1.0 – July 20, 2025
+1.2.0 – July 20, 2025
 =============
 * Compatible with Hyva
   
@@ -42,3 +42,4 @@
 =============
 
 * Release Initial Version.
+
