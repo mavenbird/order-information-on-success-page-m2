@@ -1,3 +1,11 @@
+1.1.0 – July 20, 2025
+=============
+* Compatible with Hyva
+  
+1.1.0 – Jun 12, 2025
+=============
+* Compatible with Magento 2.8.1-p1
+
 1.0.8 – August 12, 2024
 =============
 * Designing Changes on success page.
@@ -32,4 +40,5 @@
 
 1.0.0 – February 21, 2018
 =============
+
 * Release Initial Version.
