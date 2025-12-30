@@ -1,3 +1,8 @@
+1.3.1 – December 30, 2025
+=============
+* Upgraded for compatibility with Magento 2.4.8-p3.
+* Verified and compatible with PHP version 8.3.
+
 1.2.0 – July 20, 2025
 =============
 * Compatible with Hyva
